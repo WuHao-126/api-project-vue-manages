@@ -47,7 +47,7 @@
                             list-type="picture-card"
                             class="avatar-uploader"
                             :show-upload-list="false"
-                            action="/api/upload"
+                            action="/api/upload/interface"
                             :before-upload="beforeUpload"
                             @change="handleChange"
                     >
