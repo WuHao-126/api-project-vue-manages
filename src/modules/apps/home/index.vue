@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box" title="数据监控面板">
         <div style="padding: 10px;">
             <a-row :gutter="24">
                 <a-col :span="6">

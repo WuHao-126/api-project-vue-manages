@@ -9,25 +9,14 @@
                     </div>
                 </template>
             </a-range-picker>
-            <span class="search-title">类型：</span>
+            <span class="search-title">作者：</span>
             <a-select default-value="" style="width: 120px" @change="handleChange">
                 <a-select-option :value="item.id" v-for="(item,index) in tags" :key="index">
                     {{item.name}}
                 </a-select-option>
             </a-select>
-            <span class="search-title">状态：</span>
-            <a-select default-value="jack" style="width: 120px" @change="handleChange">
-                <a-select-option value="jack">
-                    上线
-                </a-select-option>
-                <a-select-option value="lucy">
-                    下线
-                </a-select-option>
-            </a-select>
-            <span class="search-title">名称：</span>
-            <a-input style="width: 200px" placeholder="请输入接口名称" />
-            <span class="search-title">路径：</span>
-            <a-input style="width: 200px" placeholder="请输入接口路径" />
+            <span class="search-title">文章标题：</span>
+            <a-input style="width: 200px" placeholder="请输入标题" />
             <a-button style="margin-left: 20px" type="primary">
                 搜索
             </a-button>
