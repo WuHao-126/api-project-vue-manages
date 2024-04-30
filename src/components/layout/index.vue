@@ -1,8 +1,8 @@
 <template>
     <a-layout id="components-layout-demo-side" style="min-height: 100vh">
         <a-layout-sider theme="dark" v-model="collapsed" collapsible>
-            <div class="logo">
-                <p>API Open Prafram</p>
+            <div class="logo" v-if="!collapsed">
+                <span>API Open Prafram</span>
             </div>
             <a-menu @click="routerChange" theme="dark" :default-selected-keys="['1']" mode="inline">
                 <a-menu-item  key="/index">
@@ -38,10 +38,10 @@
                 </a-sub-menu>
                 <a-sub-menu key="sub4">
                     <span slot="title"><a-icon type="file-protect" /><span>接口申请</span></span>
-                    <a-menu-item key="10">
+                    <a-menu-item key="/interface/applyadd">
                         加入申请
                     </a-menu-item>
-                    <a-menu-item key="11">
+                    <a-menu-item key="/interface/customized">
                         申请定制
                     </a-menu-item>
                 </a-sub-menu>
@@ -103,7 +103,12 @@
 <style>
     #components-layout-demo-side .logo {
         height: 32px;
-        background: rgba(255, 255, 255, 0.2);
+        background: black;
         margin: 16px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
     }
 </style>

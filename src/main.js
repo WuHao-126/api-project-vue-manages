@@ -9,6 +9,10 @@ import 'ant-design-vue/dist/antd.css';
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
+import moment from 'moment'
+import 'moment/dist/locale/zh-cn'
+moment.locale('zh-cn')
+
 Vue.config.productionTip = false
 Vue.use(mavonEditor)
 Vue.use(Antd);

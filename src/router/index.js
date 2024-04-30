@@ -47,6 +47,14 @@ const router =new VueRouter({
           component: () =>  import('../modules/apps/interface/components/interface-detail')
         },
         {
+          path:'/interface/applyadd',
+          component: () =>  import('../modules/apps/apply/apply-add')
+        },
+        {
+          path:'/interface/customized',
+          component: () =>  import('../modules/apps/apply/apply-customized')
+        },
+        {
           path: '/blog',
           component: () => import('../modules/apps/blog/index')
         },
@@ -74,9 +82,9 @@ router.beforeEach((to,from,next)=>{
   if(to.path === '/login' || to.path === '/'){
     next()
   }else{
-    let user = localStorage.getItem("user");
-    let user1=window.sessionStorage.getItem("user");
-    if(user !== 'null' || user1 !== 'null'){
+    let user=window.sessionStorage.getItem("user");
+
+    if(user !== null){
       next();
     }else{
       next("/login")

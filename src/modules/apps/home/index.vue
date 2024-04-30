@@ -136,23 +136,28 @@
             dataIndex: 'name',
             key: 'name',
             scopedSlots: { customRender: 'name' },
+            align:"center"
         },
         {
             title: 'API接口地址',
             dataIndex: 'url',
             key: 'url',
+            ellipsis:true,
+            align:"center"
         },
         {
-            title: '接口响应时间',
+            title: '接口响应时间(秒)',
             dataIndex: 'responseTime',
             key: 'responseTime',
             ellipsis: true,
+            align:"center"
         },
         {
             title: '发生时间',
             dataIndex: 'createTime',
             key: 'createTime',
             ellipsis: true,
+            align:"center"
         },
         {
             title: '操作',

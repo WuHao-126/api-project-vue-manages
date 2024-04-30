@@ -102,14 +102,15 @@
                     </div>
                     <div style="margin-top: 30px">
                         <h4>响应参数</h4>
-                        <mavon-editor class="markdown"
-                                      v-model="addInterfaceParam.responseParamsExample"
-                                      :toolbarsFlag=false
-                                      :subfield=false
-                                      defaultOpen="preview"
-                                      :boxShadow="true"
-                                      style="z-index:0;width: 60%;height: 200px"
-                        ></mavon-editor>
+                        <div style="margin-top: 30px">
+                            <h4>响应参数</h4>
+                            <a-textarea
+                                    style="font-size: 16px;font-weight: 800"
+                                    v-model="addInterfaceParam.responseParamsExample"
+                                    placeholder="Controlled autosize"
+                                    :auto-size="{ minRows: 10 }"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

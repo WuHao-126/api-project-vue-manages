@@ -2,7 +2,7 @@
     <div class="content">
         <div class="search">
             <span>日期：</span>
-            <a-range-picker style="width: 250px">
+            <a-range-picker style="width: 250px" :locale="locale">
                 <template slot="dateRender" slot-scope="current">
                     <div class="ant-calendar-date" :style="getCurrentStyle(current)">
                         {{ current.date() }}
@@ -60,9 +60,11 @@
         updateInterfaceInfo,
         deleteInterface
     } from './api'
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     export default {
         data() {
             return {
+                locale,
                 columns : [
                     {
                         title: '接口名称',

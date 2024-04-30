@@ -2,15 +2,15 @@
     <div class="content">
         <div class="search">
             <span>日期：</span>
-            <a-range-picker style="width: 250px" v-model="aaa" @change="dateChange">
-                <template slot="dateRender" slot-scope="current">
+            <a-range-picker style="width: 250px" v-model="aaa" @change="dateChange" :locale="locale">
+                <template slot="dateRender" slot-scope="current" :locale="locale">
                     <div class="ant-calendar-date" :style="getCurrentStyle(current)">
                         {{ current.date() }}
                     </div>
                 </template>
             </a-range-picker>
             <span class="search-title">权限：</span>
-            <a-select style="width: 120px" @change="roleChange">
+            <a-select style="width: 120px"  @change="roleChange">
                 <a-select-option value="superadmin">
                     超级管理员
                 </a-select-option>
@@ -34,7 +34,7 @@
                 </a-select-option>
             </a-select>
             <span class="search-title">关键字：</span>
-            <a-input v-model="reuqestParam.keywords" style="width: 200px" placeholder="Basic usage" />
+            <a-input v-model="reuqestParam.keywords" style="width: 200px" placeholder="请输入关键字" />
 
             <a-button @click="getUserInfoList" style="margin-left: 20px" type="primary">
                 搜索
@@ -56,14 +56,6 @@
         </a-table>
         <div>
             <a-modal v-model="visible" title="用户添加" :footer="null">
-<!--                <template slot="footer">-->
-<!--                    <a-button key="back" @click="handleCancel">-->
-<!--                        取消-->
-<!--                    </a-button>-->
-<!--                    <a-button key="submit" type="primary" :loading="loading" @click="addUserInfo">-->
-<!--                        提交-->
-<!--                    </a-button>-->
-<!--                </template>-->
                 <div>
                     <add-user></add-user>
                 </div>
@@ -186,6 +178,7 @@
         },
     ];
     import addUser from './components/add-user'
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     import {
         getUserInfoList,
         addUserInfo,
@@ -198,6 +191,8 @@
         },
         data() {
             return {
+                locale,
+                bbb:'zhCN',
                 aaa:'',
                 columns,
                 userList:[],

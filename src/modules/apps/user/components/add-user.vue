@@ -18,7 +18,6 @@
                             class="avatar-uploader"
                             :show-upload-list="false"
                             action="api/upload/user"
-                            48
                             :before-upload="beforeUpload"
                             @change="handleChange"
                     >

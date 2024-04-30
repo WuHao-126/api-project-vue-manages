@@ -2,7 +2,7 @@
     <div class="content">
         <div class="search">
             <span>日期：</span>
-            <a-range-picker style="width: 250px">
+            <a-range-picker style="width: 250px" :locale="locale">
                 <template slot="dateRender" slot-scope="current">
                     <div class="ant-calendar-date" :style="getCurrentStyle(current)">
                         {{ current.date() }}
@@ -10,11 +10,8 @@
                 </template>
             </a-range-picker>
             <span class="search-title">作者：</span>
-            <a-select default-value="" style="width: 120px" @change="handleChange">
-                <a-select-option :value="item.id" v-for="(item,index) in tags" :key="index">
-                    {{item.name}}
-                </a-select-option>
-            </a-select>
+            <a-input default-value="" style="width: 120px" placeholder="作者名称">
+            </a-input>
             <span class="search-title">文章标题：</span>
             <a-input style="width: 200px" placeholder="请输入标题" />
             <a-button style="margin-left: 20px" type="primary">
@@ -50,6 +47,7 @@
 </template>
 <script>
 
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     import
     {
         getBlogList,
@@ -58,6 +56,7 @@
     export default {
         data() {
             return {
+                locale,
                 columns : [
                     {
                         title: '博客标题',
@@ -134,7 +133,15 @@
             },
             goBlogDetail(id){
                 this.$router.push("/blog/detail/"+id)
-            }
+            },
+            getCurrentStyle(current, today) {
+                const style = {};
+                if (current.date() === 1) {
+                    style.border = '1px solid #1890ff';
+                    style.borderRadius = '50%';
+                }
+                return style;
+            },
         }
     };
 </script>
