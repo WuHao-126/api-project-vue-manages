@@ -20,7 +20,7 @@ export const getStatistics = ()=> {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export const getTimeoutList = (param) =>{
-    return request.get("api/web/timeout",param)
+    return request.get("api/interface/timeout",param)
 }
 /**
  * 获取异常列表
@@ -29,4 +29,8 @@ export const getTimeoutList = (param) =>{
  */
 export const getExceptionalList = (param) =>{
     return request.get("api/web/exceptional",param)
+}
+
+export const deleteTimeoutData = (id) =>{
+    return request.get("api/interface/timeout/delete?id="+id)
 }

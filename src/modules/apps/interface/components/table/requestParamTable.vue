@@ -42,14 +42,14 @@
                 <div class="editable-row-operations">
                         <span v-if="record.addable">
                           <a @click="save(record,index)">保存</a>
-                          <a-popconfirm style="margin-left: 10px" title="确定要取消吗" @confirm="() => cancel(index)">
+                          <a-popconfirm style="margin-left: 10px" title="确定要取消吗" okText="确定" cancelText="取消" @confirm="() => cancel(index)">
                             <a>取消</a>
                           </a-popconfirm>
                         </span>
                     <span v-else>
                           <a :disabled="editingKey !== ''" @click="edit(record,index)">编辑</a>
 <!--                          <a :disabled="editingKey !== ''" style="margin-left: 10px" @click="onDelete(index)">删除</a>-->
-                          <a-popconfirm :disabled="editingKey !== ''" style="margin-left: 10px" title="确定要删除吗" @confirm="() => onDelete(index)">
+                          <a-popconfirm :disabled="editingKey !== ''" style="margin-left: 10px" okText="确定" cancelText="取消" title="确定要删除吗" @confirm="() => onDelete(index)">
                             <a>删除</a>
                           </a-popconfirm>
                         </span>

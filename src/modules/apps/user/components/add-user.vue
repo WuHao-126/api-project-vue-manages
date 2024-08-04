@@ -17,9 +17,10 @@
                             list-type="picture-card"
                             class="avatar-uploader"
                             :show-upload-list="false"
-                            action="api/upload/user"
+                            action="api/upload/image"
                             :before-upload="beforeUpload"
                             @change="handleChange"
+                            :data="uploadType"
                     >
                         <img style="width: 100px;height: 100px" v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
@@ -43,6 +44,29 @@
                       },
                     ]"
                 />
+            </a-form-item>
+            <a-form-item v-bind="formItemLayout">
+              <span slot="label">
+                权限
+              </span>
+                <a-select style="width: 120px"   placeholder="权限"
+                          v-decorator="[
+                       'userRole',
+                      {
+                        rules: [{ required: true, message: '请输入权限!', }],
+                      },
+                    ]"
+                >
+                    <a-select-option value="superadmin">
+                        超级管理员
+                    </a-select-option>
+                    <a-select-option value="admin">
+                        管理员
+                    </a-select-option>
+                    <a-select-option value="user">
+                        用户
+                    </a-select-option>
+                </a-select>
             </a-form-item>
             <a-form-item v-bind="formItemLayout">
               <span slot="label">
@@ -71,7 +95,7 @@
                             message: '请输入正确的邮箱格式!',
                           },
                           {
-                            required: true,
+                            required: false,
                             message: '请输入邮箱!',
                           },
                         ],
@@ -129,7 +153,7 @@
                     v-decorator="[
                       'phone',
                       {
-                        rules: [{ required: true, message: '请输入手机号!' }],
+                        rules: [{ required: false, message: '请输入手机号!' }],
                       },
                     ]"
                     style="width: 100%"
@@ -140,13 +164,12 @@
                 <a-button type="primary" html-type="submit">
                     添加
                 </a-button>
-                <a-button type="primary" style="margin-left: 20px">
+                <a-button @click="cancel" type="primary" style="margin-left: 20px">
                     取消
                 </a-button>
             </a-form-item>
         </a-form>
     </div>
-
 </template>
 
 <script>
@@ -155,48 +178,16 @@
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
     }
-    const residences = [
-        {
-            value: 'zhejiang',
-            label: 'Zhejiang',
-            children: [
-                {
-                    value: 'hangzhou',
-                    label: 'Hangzhou',
-                    children: [
-                        {
-                            value: 'xihu',
-                            label: 'West Lake',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            value: 'jiangsu',
-            label: 'Jiangsu',
-            children: [
-                {
-                    value: 'nanjing',
-                    label: 'Nanjing',
-                    children: [
-                        {
-                            value: 'zhonghuamen',
-                            label: 'Zhong Hua Men',
-                        },
-                    ],
-                },
-            ],
-        },
-    ];
-
+    import {
+        addUserInfo
+    } from '../api'
     export default {
         data() {
             return {
+                addUserParam:{},
                 loading:false,
                 imageUrl:'',
                 confirmDirty: false,
-                residences,
                 autoCompleteResult: [],
                 formItemLayout: {
                     labelCol: {
@@ -227,12 +218,30 @@
             this.form = this.$form.createForm(this, { name: 'register' });
         },
         methods: {
-            handleSubmit(e) {
+            uploadType(){
+                return{
+                   type:"user"
+                }
+            },
+            async addUserInfo(param){
+                let res = await addUserInfo(param);
+                if(res.data.code===0){
+                    this.$message.success("添加成功")
+                    this.$emit("addVisible",false)
+                }else{
+                    this.$message.error(res.data.message)
+                }
+                return res.data.code
+            },
+            async handleSubmit(e) {
                 e.preventDefault();
-                this.form.validateFieldsAndScroll((err, values) => {
+                await this.form.validateFieldsAndScroll((err, values) => {
                     if (!err) {
-                        console.log(values)
-                        console.log('Received values of form: ', values);
+                        if(values.userAvatar!=null){
+                            values.userAvatar=values.userAvatar.file.name
+                        }
+                       let code=this.addUserInfo(values)
+                        this.form.resetFields();
                     }
                 });
             },
@@ -289,6 +298,11 @@
                 }
                 return isJpgOrPng && isLt2M;
             },
+            cancel(){
+                console.log(111)
+                this.form.resetFields()
+                this.$emit("addVisible",false)
+            }
         },
     };
 </script>

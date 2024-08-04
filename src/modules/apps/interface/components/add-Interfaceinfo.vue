@@ -47,11 +47,12 @@
                             list-type="picture-card"
                             class="avatar-uploader"
                             :show-upload-list="false"
-                            action="/api/upload/interface"
+                            :data="uploadType"
+                            action="/api/upload/image"
                             :before-upload="beforeUpload"
                             @change="handleChange"
                     >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <img style="width: 210px;height: 210px" v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'" />
                             <div class="ant-upload-text">
@@ -231,6 +232,11 @@
            this.getInterfaceTags();
         },
         methods:{
+            uploadType(){
+                return{
+                    type:"interface"
+                }
+            },
             async getInterfaceTags(){
               let res = await getInterfaceTags();
               this.tags = res.data.data

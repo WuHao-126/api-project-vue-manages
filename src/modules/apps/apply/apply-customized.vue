@@ -10,12 +10,15 @@
                 </template>
             </a-range-picker>
             <span class="search-title">状态：</span>
-            <a-select  style="width: 120px" @change="handleChange">
+            <a-select  style="width: 120px" @change="handleChange" placeholder="申请状态">
                 <a-select-option value="jack">
-                    同意
+                    申请中
                 </a-select-option>
                 <a-select-option value="lucy">
-                    下线
+                    已通过
+                </a-select-option>
+                <a-select-option value="lucy">
+                    已拒绝
                 </a-select-option>
             </a-select>
             <span class="search-title">名称：</span>
@@ -26,8 +29,8 @@
         </div>
         <a-table :columns="columns" :data-source="customizedList">
             <template slot="action" slot-scope="text, record">
-                <a href="javascript:void(0)"  style="margin-left: 10px"  type="primary">同意</a>
-                <a href="javascript:void(0)"  style="margin-left: 10px"  type="primary">拒绝</a>
+                <a href="javascript:void(0)" @click="updateState(record,1)"  style="margin-left: 10px"  type="primary">同意</a>
+                <a href="javascript:void(0)" @click="updateState(record,2)"  style="margin-left: 10px"  type="primary">拒绝</a>
             </template>
         </a-table>
     </div>
@@ -49,6 +52,15 @@
             title: '申请状态',
             dataIndex: 'state',
             key: 'state',
+            customRender:function (text){
+                if (text === 0) {
+                    return "申请中";
+                }else if (text===1){
+                    return "已通过"
+                }else{
+                    return "已拒绝"
+                }
+            }
         },
         {
             title: '预算（元）',
@@ -84,7 +96,10 @@
     ];
 
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
-    import { getApplyCustomized } from './api'
+    import {
+        getApplyCustomized,
+        updateState
+    } from './api'
     export default {
         data() {
             return {
@@ -106,6 +121,16 @@
                     console.log(res.data.data)
                     let { records, total}=res.data.data
                     this.customizedList=records
+                }else{
+                    this.$message.error(res.data.message)
+                }
+            },
+            async updateState(record,val){
+                record.state=val
+                let res = await updateState(record)
+                if(res.data.code===0){
+                    this.$message.success("修改成功")
+                    this.getApplyCustomized()
                 }else{
                     this.$message.error(res.data.message)
                 }

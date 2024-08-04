@@ -14,9 +14,9 @@
                 <a-input class="login-input" size="large" prefix-icon="el-icon-user"  v-model="UserLoginRequest.userAccount" placeholder="请输入账号">
                     <a-icon slot="prefix" type="user" />
                 </a-input>
-                <a-input class="login-input" size="large" prefix-icon="el-icon-lock" v-model="UserLoginRequest.userPassword" placeholder="请输入密码" show-password>
+                <a-input-password class="login-input" size="large" prefix-icon="el-icon-lock" v-model="UserLoginRequest.userPassword" placeholder="请输入密码" show-password>
                     <a-icon slot="prefix" type="lock" />
-                </a-input><br>
+                </a-input-password><br>
                 <a-button type="primary" style="height: 40px;width: 300px; margin-top: 20px" @click="userLogin">登录</a-button>
             </div>
         </a-card>

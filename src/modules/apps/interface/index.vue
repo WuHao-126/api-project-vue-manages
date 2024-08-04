@@ -2,7 +2,7 @@
     <div class="content">
         <div class="search">
             <span>日期：</span>
-            <a-range-picker style="width: 250px" :locale="locale">
+            <a-range-picker style="width: 250px" :locale="locale" v-model="dataRange" @change="dateChange">
                 <template slot="dateRender" slot-scope="current">
                     <div class="ant-calendar-date" :style="getCurrentStyle(current)">
                         {{ current.date() }}
@@ -10,29 +10,29 @@
                 </template>
             </a-range-picker>
             <span class="search-title">类型：</span>
-            <a-select default-value="" style="width: 120px" @change="handleChange">
+            <a-select default-value="" style="width: 120px" v-model="queryParam.type" placeholder="类型">
                 <a-select-option :value="item.id" v-for="(item,index) in tags" :key="index">
                     {{item.name}}
                 </a-select-option>
             </a-select>
             <span class="search-title">状态：</span>
-            <a-select default-value="jack" style="width: 120px" @change="handleChange">
-                <a-select-option value="jack">
-                    上线
+            <a-select default-value="jack" style="width: 120px" v-model="queryParam.state" placeholder="状态">
+                <a-select-option value="1">
+                    启用
                 </a-select-option>
-                <a-select-option value="lucy">
-                    下线
+                <a-select-option value="0">
+                    禁用
                 </a-select-option>
             </a-select>
             <span class="search-title">名称：</span>
-            <a-input style="width: 200px" placeholder="请输入接口名称" />
+            <a-input v-model="queryParam.name" style="width: 200px" placeholder="请输入接口名称" />
             <span class="search-title">路径：</span>
-            <a-input style="width: 200px" placeholder="请输入接口路径" />
-            <a-button style="margin-left: 20px" type="primary">
-                搜索
-            </a-button>
-            <a-button style="margin-left: 10px" type="primary">
+            <a-input v-model="queryParam.url" style="width: 200px" placeholder="请输入接口路径" />
+            <a-button @click="clear" style="margin-left: 10px" type="primary">
                 清空
+            </a-button>
+            <a-button @click="getInterfaceInfoList" style="margin-left: 20px" type="primary">
+                搜索
             </a-button>
             <a-button style="margin-left: 10px" type="primary">
                 新增
@@ -44,7 +44,9 @@
                 <a href="javascript:void(0)" v-if="record.state===1" style="margin-left: 10px" @click="offlineInterfaceInfo(record.id)" type="primary">禁用</a>
 <!--                <a href="javascript:void(0)" style="margin-left: 10px" @click="editRecord(record.id)" type="primary">编辑</a>-->
                 <a href="javascript:void(0)" style="margin-left: 10px" @click="interfaceDetail(record.id)" type="primary">详细</a>
-                <a href="javascript:void(0)" style="margin-left: 10px" @click="deleteInterface(record.id)" type="primary">删除</a>
+                <a-popconfirm title="确定要删除吗？" okText="确定" cancelText="取消" @confirm="()=>deleteInterface(record.id)">
+                       <a href="javascript:void(0)" style="margin-left: 10px" type="primary">删除</a>
+                </a-popconfirm>
             </template>
         </a-table>
     </div>
@@ -90,8 +92,8 @@
                     },
                     {
                         title: '接口类型',
-                        dataIndex: 'type',
-                        key: 'type',
+                        dataIndex: 'typeName',
+                        key: 'typeName',
                         width: 110,
                         align:"center",
                         customRender:function (text){
@@ -146,7 +148,9 @@
                 interfcaeInfo:[],
                 tags:[],
                 loading:true,
-                total:''
+                total:'',
+                queryParam:{},
+                dataRange:'',
             };
         },
         mounted() {
@@ -157,7 +161,7 @@
             async getInterfaceInfoList(){
                 this.loading=true
                 let param={
-
+                    ...this.queryParam
                 }
                let res= await  getInterfaceInfoList(param)
                 if(res.data.code === 0){
@@ -227,7 +231,15 @@
                 }
                 return style;
             },
-
+            clear(){
+                this.queryParam={}
+                this.dataRange=''
+                this.getInterfaceInfoList()
+            },
+            dateChange(date, dateString) {
+                this.queryParam.beginDate=dateString[0]
+                this.queryParam.endDate=dateString[1]
+            },
         }
     };
 </script>

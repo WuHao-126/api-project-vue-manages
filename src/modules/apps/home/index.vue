@@ -108,6 +108,11 @@
                     <a-card class="interface-table" title="接口响应情况">
                         <a-table :columns="columns" :data-source="timeoutInterfaceList" :pagination="false">
                             <a slot="name" slot-scope="text">{{ text }}</a>
+                            <template slot="action" slot-scope="text, record">
+                                <a-popconfirm   title="确定要删除吗?" okText="确定" cancelText="取消"  @confirm="() =>deleteTimeoutData(record.id)">
+                                    <a style="color: red">删除</a>
+                                </a-popconfirm>
+                            </template>
                         </a-table>
                     </a-card>
                 </a-col>
@@ -161,9 +166,9 @@
         },
         {
             title: '操作',
-            dataIndex: 'createTime',
-            key: 'createTime',
-            ellipsis: true,
+            key: 'action',
+            scopedSlots: { customRender: 'action' },
+            align:"center"
         },
     ];
     const data1 = [
@@ -184,7 +189,8 @@
         getSystem,
         getStatistics,
         getTimeoutList,
-        getExceptionalList
+        getExceptionalList,
+        deleteTimeoutData
     } from './api'
     import * as echarts from 'echarts';
     export default{
@@ -318,6 +324,16 @@
                     this.exceptionalList=res.data.data.records
                 }else{
                     this.$message.error("获取异常列表失败")
+                }
+            },
+            async deleteTimeoutData(id){
+                console.log(id)
+                let res=await deleteTimeoutData(id);
+                if(res.data.code===0){
+                    this.$message.success("删除成功")
+                    this.getTimeoutList();
+                }else{
+                    this.$message.error("删除失败")
                 }
             }
         }

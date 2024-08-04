@@ -8,11 +8,12 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="api/upload/logo"
+                        :data="uploadType"
+                        action="api/upload/image"
                         :before-upload="beforeUpload"
                         @change="handleChange"
                 >
-                    <img v-if="webInfo.logo" :src="imageUrl" alt="avatar" />
+                    <img style="width: 200px;height: 200px" v-if="webInfo.logo" :src="imageUrl" alt="avatar" />
                     <div v-else>
                         <a-icon :type="loading ? 'loading' : 'plus'" />
                         <div class="ant-upload-text">
@@ -36,16 +37,20 @@
             <br />
             <br />
             <h3>网站公告：</h3>
-            <a-textarea placeholder="请输入网站公告" allow-clear @change="onChange" />
-            <div>
-                <a-input-number id="inputNumber" v-model="webInfo.notice" :min="1" :max="10" />
-                当前值：{{ value }}
-            </div>
+            <a-textarea placeholder="请输入网站公告" v-model="webInfo.notice" allow-clear @change="onChange" />
             <br />
             <br />
+            <h3>发布时间：</h3>
+            <a-input-number style="width: 200px" id="inputNumber" placeholder="请输入网站公告发布时间" v-model="webInfo.day" :min="1"  />
             <a-button type="primary" @click="releaseNotice"  style="float: right;width: 100px;height: 40px">
-                发布
+                发布公告
             </a-button>
+            <a-popconfirm style="margin-right: 20px" title="确定要取消公告？" okText="确定" cancelText="取消" @confirm="() =>deleteNotice()">
+                <a-button type="primary"   style="float: right;width: 100px;height: 40px">
+                    取消发布
+                </a-button>
+            </a-popconfirm>
+
         </div>
     </div>
 </template>
@@ -59,13 +64,16 @@
     import {
         getWebInfo,
         updateWebInfo,
-        releaseNotice
+        releaseNotice,
+        deleteNotice
     } from './api'
     export default {
         name: "index",
         data(){
             return{
-                webInfo:'',
+                webInfo:{
+                    day:1
+                },
                 loading: false,
                 imageUrl: '',
             }
@@ -74,6 +82,11 @@
           this.getWebInfo();
         },
         methods: {
+            uploadType(){
+              return{
+                  type:"logo"
+              }
+            },
             onChange(e) {
                 console.log(e);
             },
@@ -106,7 +119,15 @@
                 if(res.data.code===0){
                     this.$message.success("发布成功")
                 }else{
-                    this.$message.error("发布失败")
+                    this.$message.error(res.data.message)
+                }
+            },
+            async deleteNotice(){
+                let res= await deleteNotice();
+                if(res.data.code===0){
+                    this.$message.success("取消公告成功")
+                }else{
+                    this.$message.error(res.data.message)
                 }
             },
             handleChange(info) {

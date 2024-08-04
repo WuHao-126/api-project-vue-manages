@@ -2,7 +2,7 @@
     <div class="content">
         <div class="search">
             <span>日期：</span>
-            <a-range-picker style="width: 250px" v-model="aaa" @change="dateChange" :locale="locale">
+            <a-range-picker style="width: 250px" v-model="dataRange" @change="dateChange"  :locale="locale">
                 <template slot="dateRender" slot-scope="current" :locale="locale">
                     <div class="ant-calendar-date" :style="getCurrentStyle(current)">
                         {{ current.date() }}
@@ -10,7 +10,7 @@
                 </template>
             </a-range-picker>
             <span class="search-title">权限：</span>
-            <a-select style="width: 120px"  @change="roleChange">
+            <a-select style="width: 120px"  v-model="reuqestParam.userRole" placeholder="权限">
                 <a-select-option value="superadmin">
                     超级管理员
                 </a-select-option>
@@ -22,7 +22,7 @@
                 </a-select-option>
             </a-select>
             <span class="search-title">状态：</span>
-            <a-select style="width: 120px" @change="stateChange">
+            <a-select style="width: 120px" v-model="reuqestParam.userState" placeholder="状态">
                 <a-select-option value="0">
                     正常
                 </a-select-option>
@@ -35,12 +35,11 @@
             </a-select>
             <span class="search-title">关键字：</span>
             <a-input v-model="reuqestParam.keywords" style="width: 200px" placeholder="请输入关键字" />
-
+            <a-button @click="clear" style="margin-left: 10px;" type="primary">
+                清空
+            </a-button>
             <a-button @click="getUserInfoList" style="margin-left: 20px" type="primary">
                 搜索
-            </a-button>
-            <a-button @click="clear" style="margin-left: 10px" type="primary">
-                清空
             </a-button>
             <a-button @click="showModal" style="margin-left: 10px" type="primary">
                 新增
@@ -55,10 +54,39 @@
             </template>
         </a-table>
         <div>
-            <a-modal v-model="visible" title="用户添加" :footer="null">
+            <a-modal v-model="addVisible" title="用户添加" :footer="null">
                 <div>
-                    <add-user></add-user>
+                    <add-user @addVisible="offModal(val)"></add-user>
                 </div>
+            </a-modal>
+            <a-modal
+                    title="修改用户信息"
+                    :visible="updateVisible"
+                    @ok="updateUserInfo()"
+                    @cancel="handleCancel"
+                    okText="保存"
+                    cancelText="取消"
+            >
+                <span class="title">昵称：</span>
+                <a-input class="input" v-model="selectUserUpdate.userName" placeholder="请输入昵称" /><br><br>
+                <span class="title">账号：</span>
+                <a-input class="input" v-model="selectUserUpdate.userAccount" placeholder="请输入账号" /><br><br>
+                <span class="title">密码：</span>
+                <a-input-password class="input" v-model="selectUserUpdate.userPassword" placeholder="请输入密码" /><br><br>
+                <span class="title">邮箱：</span>
+                <a-input class="input" v-model="selectUserUpdate.email" placeholder="请输入密码" /><br><br>
+                <span class="title">权限：</span>
+                <a-select default-value="lucy" style="width: 120px" v-model="selectUserUpdate.userRole">
+                    <a-select-option value="user">
+                        user
+                    </a-select-option>
+                    <a-select-option value="admin">
+                        admin
+                    </a-select-option>
+                    <a-select-option value="superadmin" disabled>
+                        superadmin
+                    </a-select-option>
+                </a-select>
             </a-modal>
         </div>
     </div>
@@ -178,6 +206,7 @@
         },
     ];
     import addUser from './components/add-user'
+    import updateUser from './components/update-user'
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     import {
         getUserInfoList,
@@ -187,18 +216,19 @@
     } from "./api"
     export default {
         components:{
-          addUser
+          addUser,
+          updateUser
         },
         data() {
             return {
                 locale,
                 bbb:'zhCN',
-                aaa:'',
+                dataRange:'',
                 columns,
                 userList:[],
                 reuqestParam:{
-                    userRole:'',
-                    userState:'',
+                    userRole:'user',
+                    userState:'0',
                     beginDate:'',
                     endDate:'',
                     keywords:''
@@ -214,7 +244,9 @@
                     userRole:'',
                 },
                 loading: true,
-                visible: false,
+                addVisible: false,
+                updateVisible:false,
+                selectUserUpdate:''
             };
         },
         mounted() {
@@ -239,13 +271,15 @@
               }
               let res= await addUserInfo(param)
               if(res.data.code === 0){
-                  this.visible = false;
+                  this.addVisible = false;
                   this.loading = false;
               }
             },
             editRecord(record) {
                 // 编辑按钮点击事件，可以在这里执行编辑操作
-                console.log('编辑记录:', record);
+                this.updateVisible=true
+                this.selectUserUpdate=record
+                this.selectUserUpdate.userPassword=''
             },
             getCurrentStyle(current, today) {
                 const style = {};
@@ -278,11 +312,15 @@
                     this.$message.error("状态修改失败")
                 }
             },
-            roleChange(value){
-               this.reuqestParam.userRole=value
-            },
-            stateChange(value){
-               this.reuqestParam.userState=value
+            async updateUserInfo(){
+               let res=await updateUserInfo(this.selectUserUpdate)
+                if(res.data.code===0){
+                    this.$message.success("修改成功")
+                    this.getUserInfoList();
+                    this.updateVisible=false
+                }else{
+                    this.$message.error(res.data.message)
+                }
             },
             dateChange(date, dateString) {
                 this.reuqestParam.beginDate=dateString[0]
@@ -290,12 +328,19 @@
             },
             clear(){
                 this.reuqestParam={}
+                this.dataRange=[]
+                this.getUserInfoList()
             },
             showModal() {
-                this.visible = true;
+                this.addVisible = true;
+            },
+            offModal(val){
+                this.addVisible = val;
+                this.getUserInfoList()
             },
             handleCancel(e) {
-                this.visible = false;
+                this.addVisible = false;
+                this.updateVisible=false;
             },
         }
     };
@@ -309,5 +354,11 @@
     }
     .search-title{
         margin-left: 20px;
+    }
+    .title{
+        font-size: 14px;
+    }
+    .input{
+        width: 90%;
     }
 </style>
