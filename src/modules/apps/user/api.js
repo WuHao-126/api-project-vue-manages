@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "../../../config/axios";
 //获取用户信息
 export const getUserInfoList = (param) =>{
     return request.post("/api/user/list/page",param)

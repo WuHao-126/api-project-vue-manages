@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "../../../config/axios";
 //获取接口分页列表
 export const getInterfaceInfoList = (param) =>{
     return request.post("/api/interface/page",param)

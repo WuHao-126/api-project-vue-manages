@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "../../../config/axios";
 
 /**
  * 获得系统资源数据

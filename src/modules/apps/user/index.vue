@@ -206,7 +206,6 @@
         },
     ];
     import addUser from './components/add-user'
-    import updateUser from './components/update-user'
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     import {
         getUserInfoList,
@@ -217,7 +216,6 @@
     export default {
         components:{
           addUser,
-          updateUser
         },
         data() {
             return {

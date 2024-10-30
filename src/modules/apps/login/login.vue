@@ -55,18 +55,10 @@
                 }
                 axios.post("/api/user/admin/login",this.UserLoginRequest).then((res)=>{
                     if(res.data.code === 0){
-                        let userId=res.data.data;
-                        console.log(userId)
-                        if(this.auto){
-                            //进行自动登录
-                            localStorage.setItem("user",userId)
-                        }else {
-                            //未进行自动登录
-                            window.sessionStorage.setItem("user",userId)
-                        }
-                        this.$router.push("/index")
+                        let token=res.data.data.token;
+                        window.sessionStorage.setItem("token",token)
+                        this.$router.push("/")
                     }else{
-                        console.log(res.data)
                         this.$message.error(res.data.message)
                     }
                 })

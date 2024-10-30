@@ -5,7 +5,7 @@
                 <span>API Open Prafram</span>
             </div>
             <a-menu @click="routerChange" theme="dark" :default-selected-keys="['1']" mode="inline">
-                <a-menu-item  key="/index">
+                <a-menu-item  key="/data">
                     <a-icon type="pie-chart" />
                     <span>数据监控</span>
                 </a-menu-item>
@@ -34,15 +34,6 @@
                     </a-menu-item>
                     <a-menu-item key="/web/tag">
                         标签管理
-                    </a-menu-item>
-                </a-sub-menu>
-                <a-sub-menu key="sub4">
-                    <span slot="title"><a-icon type="file-protect" /><span>接口申请</span></span>
-                    <a-menu-item key="/interface/applyadd">
-                        加入申请
-                    </a-menu-item>
-                    <a-menu-item key="/interface/customized">
-                        申请定制
                     </a-menu-item>
                 </a-sub-menu>
                 <a-sub-menu key="sub5">
@@ -90,6 +81,7 @@
         },
         methods:{
             routerChange({ key, keyPath }){
+              console.log(key)
                 if(this.$route.path === key){
                     this.$router.go(0)
                 }else{

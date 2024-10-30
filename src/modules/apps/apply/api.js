@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "../../../config/axios";
 //写博客
 export const getApplyCustomized = (param) =>{
     return request.post("/api/customized/all",param)

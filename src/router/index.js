@@ -16,10 +16,10 @@ const router =new VueRouter({
     {
       path:"/index",
       component:() => import('../components/layout/index'),
-      redirect: "/index",
+      redirect: "/data",
       children:[
         {
-          path:'/index',
+          path:'/data',
           component: () => import('../modules/apps/home/index')
         },
         {
@@ -82,7 +82,7 @@ router.beforeEach((to,from,next)=>{
   if(to.path === '/login' || to.path === '/'){
     next()
   }else{
-    let user=window.sessionStorage.getItem("user");
+    let user=window.sessionStorage.getItem("token");
 
     if(user !== null){
       next();
